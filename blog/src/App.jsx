@@ -1,4 +1,5 @@
 import Banner from "./components/Banner";
+import Blogs from "./components/Blogs";
 import Navbar from "./components/Navbar";
 
 function App() {
@@ -6,6 +7,7 @@ function App() {
     <main className="min-h-screen">
       <Navbar />
       <Banner />
+      <Blogs />
     </main>
   );
 }
