@@ -2,7 +2,8 @@
 // import Blogs from "./components/Blogs";
 import FooterComponent from "./components/Footer";
 import Navbar from "./components/Navbar";
-import Details from "./pages/Details";
+import CreatePage from "./pages/CreatePage";
+// import Details from "./pages/Details";
 
 function App() {
   return (
@@ -10,7 +11,8 @@ function App() {
       <Navbar />
       {/* <Banner /> */}
       {/* <Blogs /> */}
-      <Details />
+      {/* <Details /> */}
+      <CreatePage />
       <FooterComponent />
     </main>
   );
