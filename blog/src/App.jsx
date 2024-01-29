@@ -2,7 +2,8 @@
 // import Blogs from "./components/Blogs";
 import FooterComponent from "./components/Footer";
 import Navbar from "./components/Navbar";
-import CreatePage from "./pages/CreatePage";
+// import CreatePage from "./pages/CreatePage";
+import ProfilePage from "./pages/ProfilePage";
 // import Details from "./pages/Details";
 
 function App() {
@@ -12,7 +13,8 @@ function App() {
       {/* <Banner /> */}
       {/* <Blogs /> */}
       {/* <Details /> */}
-      <CreatePage />
+      {/* <CreatePage /> */}
+      <ProfilePage />
       <FooterComponent />
     </main>
   );
