@@ -1,4 +1,5 @@
 import { Avatar, Dropdown, Navbar } from "flowbite-react";
+import { Link } from "react-router-dom";
 
 function NavComponent() {
   return (
@@ -27,16 +28,23 @@ function NavComponent() {
             </span>
           </Dropdown.Header>
           <Dropdown.Divider />
-          <Dropdown.Item>Sign out</Dropdown.Item>
+          <Link to="/profile">
+            <Dropdown.Item>Profile</Dropdown.Item>
+          </Link>
+          <Link to="/sign-in">
+            <Dropdown.Item>Sign Out</Dropdown.Item>
+          </Link>
         </Dropdown>
         {/* <Button>Get started</Button> */}
         <Navbar.Toggle className="ml-2" />
       </div>
       <Navbar.Collapse>
-        <Navbar.Link href="#" active>
-          Home
+        <Navbar.Link active as={"div"}>
+          <Link to="/">Home</Link>
         </Navbar.Link>
-        <Navbar.Link href="#">Create</Navbar.Link>
+        <Navbar.Link as={"div"}>
+          <Link to="/create">Create</Link>
+        </Navbar.Link>
         <Navbar.Link href="#">About</Navbar.Link>
       </Navbar.Collapse>
     </Navbar>

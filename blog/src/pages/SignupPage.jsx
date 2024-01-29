@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 function SignupPage() {
   return (
     <div className="flex w-full max-w-sm mx-auto overflow-hidden bg-white rounded-lg shadow-lg dark:bg-gray-800 lg:max-w-4xl min-h-[85vh]">
@@ -44,12 +46,9 @@ function SignupPage() {
         <div className="flex items-center justify-between mt-4">
           <span className="w-1/5 border-b dark:border-gray-600 lg:w-1/4"></span>
 
-          <a
-            href="#"
-            className="text-xs text-center text-gray-500 uppercase dark:text-gray-400 hover:underline"
-          >
+          <span className="text-xs text-center text-gray-500 uppercase dark:text-gray-400">
             or signup with email
-          </a>
+          </span>
 
           <span className="w-1/5 border-b dark:border-gray-400 lg:w-1/4"></span>
         </div>
@@ -183,24 +182,21 @@ function SignupPage() {
           </button>
 
           <div className="mt-6 text-center ">
-            <a
-              href="#"
-              className="text-sm text-blue-500 hover:underline dark:text-blue-400"
-            >
+            <span className="text-sm text-blue-500 dark:text-blue-400">
               Already have an account?
-            </a>
+            </span>
           </div>
         </div>
 
         <div className="flex items-center justify-between mt-4">
           <span className="w-1/5 border-b dark:border-gray-600 md:w-1/4"></span>
 
-          <a
-            href="#"
+          <Link
+            to={"/sign-in"}
             className="text-xs text-gray-500 uppercase dark:text-gray-400 hover:underline"
           >
             or sign in
-          </a>
+          </Link>
 
           <span className="w-1/5 border-b dark:border-gray-600 md:w-1/4"></span>
         </div>

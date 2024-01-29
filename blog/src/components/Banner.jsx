@@ -1,5 +1,6 @@
 import { Avatar, Button } from "flowbite-react";
 import { HiOutlineArrowRight } from "react-icons/hi";
+import { Link } from "react-router-dom";
 
 function Banner() {
   return (
@@ -37,10 +38,12 @@ function Banner() {
                 </p>
               </div>
             </div>
-            <Button size={"xs"} outline gradientDuoTone="cyanToBlue">
-              Read More
-              <HiOutlineArrowRight className="ml-2 h-5 w-5" />
-            </Button>
+            <Link to={"/details/2"}>
+              <Button size={"xs"} outline gradientDuoTone="cyanToBlue">
+                Read More
+                <HiOutlineArrowRight className="ml-2 h-5 w-5" />
+              </Button>
+            </Link>
           </div>
         </div>
       </div>

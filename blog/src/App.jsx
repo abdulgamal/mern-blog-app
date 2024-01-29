@@ -1,24 +1,25 @@
-// import Banner from "./components/Banner";
-// import Blogs from "./components/Blogs";
 import FooterComponent from "./components/Footer";
 import Navbar from "./components/Navbar";
-// import LoginPage from "./pages/LoginPage";
+import LoginPage from "./pages/LoginPage";
 import SignupPage from "./pages/SignupPage";
-// import CreatePage from "./pages/CreatePage";
-// import ProfilePage from "./pages/ProfilePage";
-// import Details from "./pages/Details";
+import CreatePage from "./pages/CreatePage";
+import ProfilePage from "./pages/ProfilePage";
+import Details from "./pages/Details";
+import { Route, Routes } from "react-router-dom";
+import HomePage from "./pages/HomePage";
 
 function App() {
   return (
     <main className="min-h-screen">
       <Navbar />
-      {/* <Banner /> */}
-      {/* <Blogs /> */}
-      {/* <Details /> */}
-      {/* <CreatePage /> */}
-      {/* <ProfilePage /> */}
-      {/* <LoginPage /> */}
-      <SignupPage />
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="sign-in" element={<LoginPage />} />
+        <Route path="sign-up" element={<SignupPage />} />
+        <Route path="create" element={<CreatePage />} />
+        <Route path="profile" element={<ProfilePage />} />
+        <Route path="details/:id" element={<Details />} />
+      </Routes>
       <FooterComponent />
     </main>
   );
