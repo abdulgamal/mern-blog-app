@@ -28,10 +28,10 @@ router.post("/login", async (req, res) => {
   const { username, password: pwd } = req.body;
   try {
     const loggedUser = await User.findOne({ username });
-    const isSamePassword = await bcrypt.compare(pwd, loggedUser.password);
     if (!loggedUser) {
       return res.json({ message: "Wrong credentials" });
     }
+    const isSamePassword = await bcrypt.compare(pwd, loggedUser?.password);
     if (!isSamePassword) {
       return res.json({ message: "Wrong credentials!" });
     }
