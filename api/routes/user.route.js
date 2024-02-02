@@ -12,10 +12,12 @@ router.post("/register", async (req, res) => {
 
   try {
     const newUser = await User.create(newObj);
+
     const token = jwt.sign(
       { userId: newUser._id, isAdmin: newUser.isAdmin },
       process.env.SECRET_JWT
     );
+
     const { password, ...others } = newUser._doc;
     res.cookie("access_token", token).json(others);
   } catch (error) {
@@ -31,14 +33,17 @@ router.post("/login", async (req, res) => {
     if (!loggedUser) {
       return res.json({ message: "Wrong credentials" });
     }
+
     const isSamePassword = await bcrypt.compare(pwd, loggedUser?.password);
     if (!isSamePassword) {
       return res.json({ message: "Wrong credentials!" });
     }
+
     const token = jwt.sign(
       { userId: loggedUser._id, isAdmin: loggedUser.isAdmin },
       process.env.SECRET_JWT
     );
+
     const { password, ...others } = loggedUser._doc;
     res.cookie("access_token", token).json(others);
   } catch (error) {
