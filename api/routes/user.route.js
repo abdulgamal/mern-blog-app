@@ -4,7 +4,7 @@ const router = express.Router();
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
-router.post("/register", async (req, res) => {
+router.post("/register", async (req, res, next) => {
   const { username, email, password, profile_image } = req.body;
 
   const hashPwd = await bcrypt.hash(password, 10);
@@ -21,12 +21,11 @@ router.post("/register", async (req, res) => {
     const { password, ...others } = newUser._doc;
     res.cookie("access_token", token).json(others);
   } catch (error) {
-    console.log(error);
-    res.json({ error: error });
+    next(error);
   }
 });
 
-router.post("/login", async (req, res) => {
+router.post("/login", async (req, res, next) => {
   const { username, password: pwd } = req.body;
   try {
     const loggedUser = await User.findOne({ username });
@@ -47,7 +46,7 @@ router.post("/login", async (req, res) => {
     const { password, ...others } = loggedUser._doc;
     res.cookie("access_token", token).json(others);
   } catch (error) {
-    res.json({ error: error });
+    next(error);
   }
 });
 
