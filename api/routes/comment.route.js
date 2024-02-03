@@ -15,4 +15,14 @@ router.post("/", verifyToken, async (req, res, next) => {
   }
 });
 
+router.get("/:id", async (req, res, next) => {
+  const { id } = req.params;
+  try {
+    let comments = await Comment.find({ blogId: id });
+    res.json(comments);
+  } catch (error) {
+    next(error);
+  }
+});
+
 module.exports = router;
