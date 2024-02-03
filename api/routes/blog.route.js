@@ -43,4 +43,21 @@ router.get("/:id", async (req, res, next) => {
   }
 });
 
+router.put("/:id", verifyToken, async (req, res, next) => {
+  const { id } = req.params;
+  try {
+    const blog = await Blog.findById(id);
+    if (blog.userId.toString() !== req.userId) {
+      return res.json({ message: "Not authorized to edit this blog" });
+    }
+    let newBlog = await Blog.findOneAndUpdate({ _id: id }, req.body, {
+      new: true,
+      upsert: true,
+    });
+    res.json(newBlog);
+  } catch (error) {
+    next(error);
+  }
+});
+
 module.exports = router;
