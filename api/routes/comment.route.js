@@ -25,4 +25,21 @@ router.get("/:id", async (req, res, next) => {
   }
 });
 
+router.delete("/:id", verifyToken, async (req, res, next) => {
+  const { id } = req.params;
+  try {
+    let comment = await Comment.findOne({ _id: id });
+    console.log(comment);
+    if (comment.userId.toString() !== req.userId) {
+      return res.json({
+        message: "You are not allowed to delete this comment",
+      });
+    }
+    await Comment.findByIdAndDelete({ _id: id });
+    res.json({ message: "Comment deleted successfully" });
+  } catch (error) {
+    next(error);
+  }
+});
+
 module.exports = router;
