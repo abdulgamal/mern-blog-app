@@ -60,4 +60,20 @@ router.put("/:id", verifyToken, async (req, res, next) => {
   }
 });
 
+router.delete("/:id", verifyToken, async (req, res, next) => {
+  const { id } = req.params;
+
+  try {
+    const blog = await Blog.findById(id);
+
+    if (blog.userId.toString() !== req.userId) {
+      return res.json({ message: "Not authorized to delete this blog" });
+    }
+    await Blog.findOneAndDelete({ _id: id });
+    res.json({ message: "Blog deleted successfully" });
+  } catch (error) {
+    next(error);
+  }
+});
+
 module.exports = router;
