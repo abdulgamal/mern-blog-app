@@ -30,12 +30,12 @@ router.post("/login", async (req, res, next) => {
   try {
     const loggedUser = await User.findOne({ username });
     if (!loggedUser) {
-      return res.json({ message: "Wrong credentials" });
+      return res.status(401).json({ message: "Wrong credentials" });
     }
 
     const isSamePassword = await bcrypt.compare(pwd, loggedUser?.password);
     if (!isSamePassword) {
-      return res.json({ message: "Wrong credentials!" });
+      return res.status(401).json({ message: "Wrong credentials!" });
     }
 
     const token = jwt.sign(

@@ -3,12 +3,14 @@ const userRouter = require("./routes/user.route");
 const blogRouter = require("./routes/blog.route");
 const commentRouter = require("./routes/comment.route");
 const cookieParser = require("cookie-parser");
+const cors = require("cors");
 const { connectToDB } = require("./utils");
 require("dotenv").config();
 
 const app = express();
 app.use(express.json());
 app.use(cookieParser());
+app.use(cors());
 
 connectToDB();
 
