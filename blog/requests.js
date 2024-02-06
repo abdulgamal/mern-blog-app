@@ -6,3 +6,8 @@ export const loginFn = async (values) => {
   const response = await axios.post("/login", values);
   return response;
 };
+
+export const registerFn = async (values) => {
+  const response = await axios.post("/register", values);
+  return response;
+};
