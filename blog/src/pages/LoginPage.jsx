@@ -2,30 +2,33 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { loginFn } from "../../requests";
 import { toast } from "react-toastify";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  fetchError,
+  fetchStart,
+  fetchSuccess,
+} from "../features/users/userSlice";
 
 function LoginPage() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
-  const [loading, setLoading] = useState(false);
+  const { loading, error: errorMessage } = useSelector((state) => state.user);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const notify = (msg) => toast(msg);
 
   const handleSubmit = async () => {
     let newObj = { username, password };
-    setLoading(true);
-    setErrorMessage("");
-
+    dispatch(fetchStart());
     try {
-      const results = await loginFn(newObj);
-      console.log(results);
+      const { data } = await loginFn(newObj);
+      dispatch(fetchSuccess(data));
       navigate("/");
     } catch ({ response }) {
-      setErrorMessage(response?.data?.message);
+      dispatch(fetchError(response?.data?.message));
       notify(response?.data?.message);
     }
-    setLoading(false);
   };
 
   return (

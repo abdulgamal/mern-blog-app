@@ -2,35 +2,39 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { registerFn } from "../../requests";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  fetchError,
+  fetchStart,
+  fetchSuccess,
+} from "../features/users/userSlice";
 
 function SignupPage() {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
-  const [loading, setLoading] = useState(false);
+  const { loading, error: errorMessage } = useSelector((state) => state.user);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const notify = (msg) => toast(msg);
 
   const handleSubmit = async () => {
     let newObj = { username, email, password };
-    setErrorMessage("");
     if (password !== confirmPassword) {
       notify("Passwords do not match");
       return;
     }
-    setLoading(true);
+    dispatch(fetchStart());
     try {
-      const results = await registerFn(newObj);
-      console.log(results);
+      const { data } = await registerFn(newObj);
+      dispatch(fetchSuccess(data));
       navigate("/");
     } catch ({ response }) {
-      setErrorMessage(response?.data?.message);
+      dispatch(fetchError(response?.data?.message));
       notify(response?.data?.message);
     }
-    setLoading(false);
   };
 
   return (
