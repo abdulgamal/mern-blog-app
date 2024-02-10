@@ -18,7 +18,7 @@ function SignupPage() {
   const [file, setFile] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [url, setUrl] = useState("");
-  const [progress, setProgress] = useState("");
+  const [progress, setProgress] = useState(0);
   const { loading, error: errorMessage } = useSelector((state) => state.user);
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -153,7 +153,7 @@ function SignupPage() {
             className="hidden"
           />
         </label>
-        {progress && (
+        {progress > 0 && (
           <div className="my-2">
             <ProgressBar completed={progress} />
           </div>
