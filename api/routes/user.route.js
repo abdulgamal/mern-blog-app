@@ -19,7 +19,7 @@ router.post("/register", async (req, res, next) => {
     );
 
     const { password, ...others } = newUser._doc;
-    res.cookie("access_token", token).json(others);
+    res.cookie("access_token", token, { httpOnly: true }).json(others);
   } catch (error) {
     next(error);
   }
@@ -44,7 +44,7 @@ router.post("/login", async (req, res, next) => {
     );
 
     const { password, ...others } = loggedUser._doc;
-    res.cookie("access_token", token).json(others);
+    res.cookie("access_token", token, { httpOnly: true }).json(others);
   } catch (error) {
     next(error);
   }

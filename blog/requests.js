@@ -3,11 +3,21 @@ import axios from "axios";
 axios.defaults.baseURL = "http://localhost:8000/api";
 
 export const loginFn = async (values) => {
-  const response = await axios.post("/login", values);
+  const response = await axios.post("/login", values, {
+    withCredentials: true,
+  });
   return response;
 };
 
 export const registerFn = async (values) => {
   const response = await axios.post("/register", values);
+  return response;
+};
+
+export const createBlogFn = async (values) => {
+  const response = await axios.post("/blogs", values, {
+    withCredentials: true,
+  });
+  response;
   return response;
 };

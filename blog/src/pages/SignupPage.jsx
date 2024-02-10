@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { registerFn } from "../../requests";
@@ -8,12 +8,17 @@ import {
   fetchStart,
   fetchSuccess,
 } from "../features/users/userSlice";
+import ProgressBar from "@ramonak/react-progress-bar";
+import uploadImage from "../utils/uploadImage";
 
 function SignupPage() {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [file, setFile] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [url, setUrl] = useState("");
+  const [progress, setProgress] = useState("");
   const { loading, error: errorMessage } = useSelector((state) => state.user);
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -21,7 +26,7 @@ function SignupPage() {
   const notify = (msg) => toast(msg);
 
   const handleSubmit = async () => {
-    let newObj = { username, email, password };
+    let newObj = { username, email, password, profile_image: url };
     if (password !== confirmPassword) {
       notify("Passwords do not match");
       return;
@@ -36,6 +41,11 @@ function SignupPage() {
       notify(response?.data?.message);
     }
   };
+
+  useEffect(() => {
+    if (!file) return;
+    uploadImage(file, setUrl, setProgress);
+  }, [file]);
 
   return (
     <div className="flex w-full max-w-sm mx-auto overflow-hidden bg-white rounded-lg shadow-lg dark:bg-gray-800 lg:max-w-4xl min-h-[85vh]">
@@ -136,9 +146,18 @@ function SignupPage() {
 
           <h2 className="mx-3 text-gray-400">Profile Photo</h2>
 
-          <input id="dropzone-file" type="file" className="hidden" />
+          <input
+            id="dropzone-file"
+            type="file"
+            onChange={(e) => setFile(e.target.files[0])}
+            className="hidden"
+          />
         </label>
-
+        {progress && (
+          <div className="my-2">
+            <ProgressBar completed={progress} />
+          </div>
+        )}
         <div className="relative flex items-center mt-6">
           <span className="absolute">
             <svg

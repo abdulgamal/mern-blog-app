@@ -10,10 +10,8 @@ const connectToDB = () => {
 
 const verifyToken = (req, res, next) => {
   const { access_token } = req.cookies;
-
   const { userId } = jwt.verify(access_token, process.env.SECRET_JWT);
   req.userId = userId;
-
   next();
 };
 

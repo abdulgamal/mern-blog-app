@@ -4,7 +4,6 @@ import { Link } from "react-router-dom";
 
 function NavComponent() {
   const { user } = useSelector((state) => state.user);
-  console.log(user);
   return (
     <Navbar fluid rounded className="container mx-auto">
       <Navbar.Brand href="https://flowbite-react.com">
@@ -36,7 +35,9 @@ function NavComponent() {
             </Link>
           </Dropdown>
         ) : (
-          <Button>Get started</Button>
+          <Button>
+            <Link to="/sign-up">Get started</Link>
+          </Button>
         )}
 
         <Navbar.Toggle className="ml-2" />
