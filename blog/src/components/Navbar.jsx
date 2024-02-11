@@ -1,9 +1,11 @@
 import { Avatar, Button, Dropdown, Navbar } from "flowbite-react";
 import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 function NavComponent() {
   const { user } = useSelector((state) => state.user);
+  const { pathname } = useLocation();
+
   return (
     <Navbar fluid rounded className="container mx-auto">
       <Navbar.Brand href="https://flowbite-react.com">
@@ -43,13 +45,12 @@ function NavComponent() {
         <Navbar.Toggle className="ml-2" />
       </div>
       <Navbar.Collapse>
-        <Navbar.Link active as={"div"}>
+        <Navbar.Link active={pathname == "/"} as={"div"}>
           <Link to="/">Home</Link>
         </Navbar.Link>
-        <Navbar.Link as={"div"}>
+        <Navbar.Link active={pathname == "/create"} as={"div"}>
           <Link to="/create">Create</Link>
         </Navbar.Link>
-        <Navbar.Link href="#">About</Navbar.Link>
       </Navbar.Collapse>
     </Navbar>
   );
