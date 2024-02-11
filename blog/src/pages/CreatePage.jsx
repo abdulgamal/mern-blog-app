@@ -1,5 +1,5 @@
 import { Button, FileInput, Label, TextInput } from "flowbite-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { createBlogFn } from "../../requests";
@@ -7,6 +7,7 @@ import { toast } from "react-toastify";
 import uploadImage from "../utils/uploadImage";
 import ProgressBar from "@ramonak/react-progress-bar";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 function CreatePage() {
   const [content, setContent] = useState("");
@@ -15,6 +16,7 @@ function CreatePage() {
   const [progress, setProgress] = useState(0);
   const [file, setFile] = useState("");
   const navigate = useNavigate();
+  const { user } = useSelector((state) => state.user);
 
   const notify = (msg) => toast(msg);
 
@@ -47,6 +49,12 @@ function CreatePage() {
       notify(response.data);
     }
   };
+
+  useEffect(() => {
+    if (!user) {
+      navigate("/sign-in");
+    }
+  }, [user, navigate]);
 
   return (
     <div className="container mx-auto px-3 min-h-[85vh]">
