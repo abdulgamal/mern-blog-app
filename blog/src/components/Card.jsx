@@ -3,9 +3,9 @@ import { Link } from "react-router-dom";
 
 function Card({ item }) {
   return (
-    <Link to={"/details/3"} className="max-w-sm">
+    <Link to={`/details/${item?._id}`} className="max-w-sm">
       <img
-        src={item?.image}
+        src={item?.blog_image}
         alt={item?.title}
         className="h-[300px] w-full object-cover rounded-md"
       />
@@ -14,23 +14,29 @@ function Card({ item }) {
           ? item?.title?.slice(0, 20) + "..."
           : item?.title}
       </h5>
-      <p className="font-normal text-gray-700 dark:text-gray-400">
-        {item?.content.length > 80
-          ? item?.content?.slice(0, 80) + "..."
-          : item?.content}
-      </p>
+      <div
+        className="font-normal text-gray-700 dark:text-gray-400"
+        dangerouslySetInnerHTML={{
+          __html:
+            item?.content.length > 80
+              ? item?.content?.slice(0, 80) + "..."
+              : item?.content,
+        }}
+      />
       <div className="flex justify-between items-center">
         <div className="flex mt-2 items-center space-x-2">
           <Avatar
             alt="User settings"
-            img="https://flowbite.com/docs/images/people/profile-picture-5.jpg"
+            img={item?.userId?.profile_image}
             rounded
           />
           <div>
-            <p className="text-gray-700">Ali Marell</p>
+            <p className="text-gray-700">{item?.userId?.username}</p>
           </div>
         </div>
-        <p className="text-gray-500 text-xs font-semibold">30/12/2024</p>
+        <p className="text-gray-500 text-xs font-semibold">
+          {new Date(item?.createdAt).toLocaleDateString()}
+        </p>
       </div>
     </Link>
   );

@@ -21,3 +21,7 @@ export const createBlogFn = async (values) => {
   response;
   return response;
 };
+
+export const fetchBlogs = async () => {
+  return await axios.get("/blogs");
+};

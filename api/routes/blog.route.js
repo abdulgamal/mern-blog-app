@@ -23,7 +23,10 @@ router.post("/", verifyToken, async (req, res, next) => {
 
 router.get("/", async (req, res, next) => {
   try {
-    const blogs = await Blog.find();
+    const blogs = await Blog.find().populate("userId", [
+      "username",
+      "profile_image",
+    ]);
     res.json(blogs);
   } catch (error) {
     next(error);
