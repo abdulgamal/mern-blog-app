@@ -26,7 +26,7 @@ function Card({ item }) {
       <div className="flex justify-between items-center">
         <div className="flex mt-2 items-center space-x-2">
           <Avatar
-            alt="User settings"
+            alt="User profile"
             img={item?.userId?.profile_image}
             rounded
           />
