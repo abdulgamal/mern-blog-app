@@ -1,8 +1,14 @@
 import { Avatar, Button, Label, Textarea } from "flowbite-react";
 import { Link, useParams } from "react-router-dom";
-import { createComment, fetchBlog, fetchBlogComments } from "../../requests";
+import {
+  createComment,
+  deleteBlogComment,
+  fetchBlog,
+  fetchBlogComments,
+} from "../../requests";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import { toast } from "react-toastify";
 
 function Details() {
   const { id } = useParams();
@@ -11,6 +17,8 @@ function Details() {
   const [comment, setComment] = useState("");
   const [comments, setComments] = useState([]);
   const [refresh, setRefresh] = useState("");
+
+  const notify = (msg) => toast(msg);
 
   const fetchDetails = async (val) => {
     try {
@@ -36,10 +44,21 @@ function Details() {
       const { status } = await createComment(newObj);
       if (status == 200) {
         setComment("");
-        setRefresh("true");
+        setRefresh("post");
       }
     } catch (error) {
       console.log(error);
+    }
+  };
+
+  const deleteComment = async (val) => {
+    try {
+      const { status } = await deleteBlogComment(val);
+      if (status == 200) {
+        setRefresh("comment");
+      }
+    } catch ({ response }) {
+      notify(response?.data?.message);
     }
   };
 
@@ -130,7 +149,12 @@ function Details() {
                 <Button color="gray" pill size={"xs"}>
                   Edit
                 </Button>
-                <Button color="failure" pill size={"xs"}>
+                <Button
+                  color="failure"
+                  pill
+                  size={"xs"}
+                  onClick={() => deleteComment(comment?._id)}
+                >
                   Delete
                 </Button>
               </div>

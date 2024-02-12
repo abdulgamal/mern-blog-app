@@ -41,3 +41,7 @@ export const createComment = async (comment) => {
 export const fetchBlogComments = async (id) => {
   return await axios.get("/blogs/comments/" + id);
 };
+
+export const deleteBlogComment = async (id) => {
+  return await axios.delete("/blogs/comments/" + id, { withCredentials: true });
+};
