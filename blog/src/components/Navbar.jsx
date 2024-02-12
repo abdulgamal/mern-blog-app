@@ -8,7 +8,7 @@ function NavComponent() {
 
   return (
     <Navbar fluid rounded className="container mx-auto">
-      <Navbar.Brand href="https://flowbite-react.com">
+      <Navbar.Brand>
         <span className="self-center whitespace-nowrap text-xl font-semibold dark:text-white">
           Blog
         </span>

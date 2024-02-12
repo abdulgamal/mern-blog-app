@@ -1,11 +1,16 @@
 import { Avatar, Button, Label, Textarea } from "flowbite-react";
-import { useParams } from "react-router-dom";
-import { fetchBlog } from "../../requests";
+import { Link, useParams } from "react-router-dom";
+import { createComment, fetchBlog, fetchBlogComments } from "../../requests";
 import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 
 function Details() {
   const { id } = useParams();
   const [blog, setBlog] = useState(null);
+  const { user } = useSelector((state) => state.user);
+  const [comment, setComment] = useState("");
+  const [comments, setComments] = useState([]);
+  const [refresh, setRefresh] = useState("");
 
   const fetchDetails = async (val) => {
     try {
@@ -16,9 +21,35 @@ function Details() {
     }
   };
 
+  const fetchComments = async (val) => {
+    try {
+      const { data } = await fetchBlogComments(val);
+      setComments(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const postComment = async () => {
+    try {
+      let newObj = { blogId: id, comment };
+      const { status } = await createComment(newObj);
+      if (status == 200) {
+        setComment("");
+        setRefresh("true");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
     fetchDetails(id);
   }, [id]);
+
+  useEffect(() => {
+    fetchComments(id);
+  }, [id, refresh]);
 
   return (
     <div className="container mx-auto">
@@ -50,20 +81,62 @@ function Details() {
         </div>
       </div>
       <div className=" md:w-9/12 mx-auto px-4">
-        <div className="max-w-md">
-          <div className="mb-2 block">
-            <Label htmlFor="comment" value="Leave a comment" />
+        {user ? (
+          <div className="max-w-md">
+            <div className="mb-2 block">
+              <Label htmlFor="comment" value="Leave a comment" />
+            </div>
+            <Textarea
+              id="comment"
+              placeholder="Type a comment..."
+              value={comment}
+              onChange={(e) => setComment(e.target.value)}
+              required
+              rows={4}
+            />
+            <Button
+              disabled={comment.length < 4}
+              onClick={postComment}
+              outline
+              gradientDuoTone="cyanToBlue"
+              className="mt-3"
+            >
+              Send
+            </Button>
           </div>
-          <Textarea
-            id="comment"
-            placeholder="Type a comment..."
-            required
-            rows={4}
-          />
+        ) : (
           <Button outline gradientDuoTone="cyanToBlue" className="mt-3">
-            Send
+            <Link to="/sign-in">Login to leave a comment</Link>
           </Button>
-        </div>
+        )}
+      </div>
+      <div className="my-3 md:w-9/12 mx-auto px-3">
+        {comments.map((comment) => (
+          <div
+            key={comment?._id}
+            className="flex flex-row space-x-3 mb-3 border border-gray-100 rounded-lg items-start p-3"
+          >
+            <Avatar
+              alt="User profile"
+              img={comment?.userId?.profile_image}
+              rounded
+            />
+            <div>
+              <p className="text-xs text-gray-500">
+                {comment?.userId?.username}
+              </p>
+              <p className="text-xs">{comment?.comment}</p>
+              <div className="my-2 flex flex-row space-x-3">
+                <Button color="gray" pill size={"xs"}>
+                  Edit
+                </Button>
+                <Button color="failure" pill size={"xs"}>
+                  Delete
+                </Button>
+              </div>
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   );

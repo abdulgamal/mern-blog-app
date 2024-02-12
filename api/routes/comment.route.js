@@ -18,7 +18,10 @@ router.post("/", verifyToken, async (req, res, next) => {
 router.get("/:id", async (req, res, next) => {
   const { id } = req.params;
   try {
-    let comments = await Comment.find({ blogId: id });
+    let comments = await Comment.find({ blogId: id }).populate("userId", [
+      "username",
+      "profile_image",
+    ]);
     res.json(comments);
   } catch (error) {
     next(error);

@@ -21,9 +21,15 @@ function Banner({ blog }) {
             Featured Article
           </h2>
           <h1 className="text-xl">{blog?.title}</h1>
-          <p className="font-semibold text-sm text-gray-500 my-3 tracking-wider">
-            {blog?.content}
-          </p>
+          <div
+            className="font-semibold text-sm text-gray-500 my-3 tracking-wider"
+            dangerouslySetInnerHTML={{
+              __html:
+                blog?.content.length > 700
+                  ? blog?.content?.slice(0, 700) + "..."
+                  : blog?.content,
+            }}
+          />
           <div className="flex justify-between items-center">
             <div className="flex mt-2 items-center space-x-2">
               <Avatar

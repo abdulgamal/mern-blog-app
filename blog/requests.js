@@ -10,7 +10,9 @@ export const loginFn = async (values) => {
 };
 
 export const registerFn = async (values) => {
-  const response = await axios.post("/register", values);
+  const response = await axios.post("/register", values, {
+    withCredentials: true,
+  });
   return response;
 };
 
@@ -28,4 +30,14 @@ export const fetchBlogs = async () => {
 
 export const fetchBlog = async (id) => {
   return await axios.get("/blogs/" + id);
+};
+
+export const createComment = async (comment) => {
+  return await axios.post("/blogs/comments", comment, {
+    withCredentials: true,
+  });
+};
+
+export const fetchBlogComments = async (id) => {
+  return await axios.get("/blogs/comments/" + id);
 };

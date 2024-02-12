@@ -18,8 +18,8 @@ function Card({ item }) {
         className="font-normal text-gray-700 dark:text-gray-400"
         dangerouslySetInnerHTML={{
           __html:
-            item?.content.length > 80
-              ? item?.content?.slice(0, 80) + "..."
+            item?.content.length > 200
+              ? item?.content?.slice(0, 200) + "..."
               : item?.content,
         }}
       />
