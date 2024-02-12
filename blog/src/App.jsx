@@ -22,6 +22,7 @@ function App() {
         <Route path="create" element={<CreatePage />} />
         <Route path="profile" element={<ProfilePage />} />
         <Route path="details/:id" element={<Details />} />
+        <Route path="update/:id" element={<CreatePage />} />
       </Routes>
       <FooterComponent />
     </main>

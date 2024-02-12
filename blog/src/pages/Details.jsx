@@ -118,7 +118,9 @@ function Details() {
           {user?._id == blog?.userId?._id && (
             <>
               <div className="flex items-center space-x-2">
-                <Button color="gray">Edit</Button>
+                <Button color="gray">
+                  <Link to={`/update/${blog?._id}`}>Edit</Link>
+                </Button>
                 <Button color="failure" onClick={() => deleteBlog(blog?._id)}>
                   Delete
                 </Button>
