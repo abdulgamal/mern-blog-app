@@ -51,7 +51,9 @@ router.put("/:id", verifyToken, async (req, res, next) => {
   try {
     const blog = await Blog.findById(id);
     if (blog.userId.toString() !== req.userId) {
-      return res.json({ message: "Not authorized to edit this blog" });
+      return res
+        .status(401)
+        .json({ message: "Not authorized to edit this blog" });
     }
     let newBlog = await Blog.findOneAndUpdate({ _id: id }, req.body, {
       new: true,
@@ -70,7 +72,9 @@ router.delete("/:id", verifyToken, async (req, res, next) => {
     const blog = await Blog.findById(id);
 
     if (blog.userId.toString() !== req.userId) {
-      return res.json({ message: "Not authorized to delete this blog" });
+      return res
+        .status(401)
+        .json({ message: "Not authorized to delete this blog" });
     }
     await Blog.findOneAndDelete({ _id: id });
     res.json({ message: "Blog deleted successfully" });

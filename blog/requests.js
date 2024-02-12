@@ -45,3 +45,7 @@ export const fetchBlogComments = async (id) => {
 export const deleteBlogComment = async (id) => {
   return await axios.delete("/blogs/comments/" + id, { withCredentials: true });
 };
+
+export const deleteBlogData = async (id) => {
+  return await axios.delete("/blogs/" + id, { withCredentials: true });
+};

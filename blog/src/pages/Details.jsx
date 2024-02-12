@@ -1,14 +1,16 @@
 import { Avatar, Button, Label, Textarea } from "flowbite-react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import {
   createComment,
   deleteBlogComment,
+  deleteBlogData,
   fetchBlog,
   fetchBlogComments,
 } from "../../requests";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
+import { CiHeart } from "react-icons/ci";
 
 function Details() {
   const { id } = useParams();
@@ -17,6 +19,7 @@ function Details() {
   const [comment, setComment] = useState("");
   const [comments, setComments] = useState([]);
   const [refresh, setRefresh] = useState("");
+  const navigate = useNavigate();
 
   const notify = (msg) => toast(msg);
 
@@ -62,6 +65,17 @@ function Details() {
     }
   };
 
+  const deleteBlog = async (val) => {
+    try {
+      const { status } = await deleteBlogData(val);
+      if (status == 200) {
+        navigate("/");
+      }
+    } catch ({ response }) {
+      notify(response?.data?.message);
+    }
+  };
+
   useEffect(() => {
     fetchDetails(id);
   }, [id]);
@@ -85,18 +99,32 @@ function Details() {
           className=" text-gray-500 tracking-wider my-2"
           dangerouslySetInnerHTML={{ __html: blog?.content }}
         />
-        <div className="flex my-4 items-center space-x-3">
-          <Avatar
-            alt="User profile"
-            img={blog?.userId?.profile_image}
-            rounded
-          />
-          <p className="text-gray-500 font-semibold">
-            {blog?.userId?.username} ,
-          </p>
-          <p className=" text-gray-500 font-semibold text-xs">
-            {new Date(blog?.createdAt).toLocaleDateString()}
-          </p>
+        <div className="flex my-4 items-center space-x-3 justify-between">
+          <div className="flex items-center space-x-2">
+            <Avatar
+              alt="User profile"
+              img={blog?.userId?.profile_image}
+              rounded
+            />
+            <div>
+              <p className="text-gray-500 font-semibold">
+                {blog?.userId?.username}
+              </p>
+              <p className="text-gray-500 font-semibold text-[10px]">
+                {new Date(blog?.createdAt).toLocaleDateString()}
+              </p>
+            </div>
+          </div>
+          {user?._id == blog?.userId?._id && (
+            <>
+              <div className="flex items-center space-x-2">
+                <Button color="gray">Edit</Button>
+                <Button color="failure" onClick={() => deleteBlog(blog?._id)}>
+                  Delete
+                </Button>
+              </div>
+            </>
+          )}
         </div>
       </div>
       <div className=" md:w-9/12 mx-auto px-4">
@@ -146,17 +174,22 @@ function Details() {
               </p>
               <p className="text-xs">{comment?.comment}</p>
               <div className="my-2 flex flex-row space-x-3">
-                <Button color="gray" pill size={"xs"}>
-                  Edit
-                </Button>
-                <Button
-                  color="failure"
-                  pill
-                  size={"xs"}
-                  onClick={() => deleteComment(comment?._id)}
-                >
-                  Delete
-                </Button>
+                <div className="flex flex-row space-x-0.5 items-center">
+                  <CiHeart />
+                  <span className="text-xs text-gray-500">
+                    {comment?.numOfLikes}
+                  </span>
+                </div>
+                {user?._id == comment?.userId?._id && (
+                  <Button
+                    color="failure"
+                    pill
+                    size={"xs"}
+                    onClick={() => deleteComment(comment?._id)}
+                  >
+                    Delete
+                  </Button>
+                )}
               </div>
             </div>
           </div>

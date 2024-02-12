@@ -32,7 +32,6 @@ router.delete("/:id", verifyToken, async (req, res, next) => {
   const { id } = req.params;
   try {
     let comment = await Comment.findOne({ _id: id });
-    console.log(comment);
     if (comment.userId.toString() !== req.userId) {
       return res.status(401).json({
         message: "You are not allowed to delete this comment",
