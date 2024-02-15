@@ -12,7 +12,10 @@ app.use(cookieParser());
 app.use(express.json());
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL,
+    origin:
+      app.settings.env === "development"
+        ? process.env.FRONTEND_URL
+        : process.env.FRONTEND_PROD,
     credentials: true,
   })
 );

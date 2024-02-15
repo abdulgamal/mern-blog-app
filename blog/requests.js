@@ -1,7 +1,7 @@
 import axios from "axios";
 
 axios.defaults.baseURL =
-  import.meta.env.NODE_ENV === "development"
+  import.meta.env.MODE === "development"
     ? import.meta.env.VITE_BACKEND_LOCAL_HOST
     : import.meta.env.VITE_BACKEND_API;
 
