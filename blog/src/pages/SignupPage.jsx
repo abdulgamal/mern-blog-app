@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { registerFn } from "../../requests";
+import { registerFn, registerWithGoogle } from "../../requests";
 import { useDispatch, useSelector } from "react-redux";
 import {
   fetchError,
@@ -10,6 +10,7 @@ import {
 } from "../features/users/userSlice";
 import ProgressBar from "@ramonak/react-progress-bar";
 import uploadImage from "../utils/uploadImage";
+import { GoogleAuthProvider, getAuth, signInWithPopup } from "firebase/auth";
 
 function SignupPage() {
   const [username, setUsername] = useState("");
@@ -22,6 +23,7 @@ function SignupPage() {
   const { loading, error: errorMessage } = useSelector((state) => state.user);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const auth = getAuth();
 
   const notify = (msg) => toast(msg);
 
@@ -34,6 +36,28 @@ function SignupPage() {
     dispatch(fetchStart());
     try {
       const { data } = await registerFn(newObj);
+      dispatch(fetchSuccess(data));
+      navigate("/");
+    } catch ({ response }) {
+      dispatch(fetchError(response?.data?.message));
+      notify(response?.data?.message);
+    }
+  };
+
+  const handleGoogleSignup = async () => {
+    const provider = new GoogleAuthProvider();
+    dispatch(fetchStart());
+
+    try {
+      const { user } = await signInWithPopup(auth, provider);
+
+      let newObj = {
+        username: user?.displayName.split(" ")[0],
+        email: user?.email,
+        profile_image: user?.photoURL,
+      };
+
+      let { data } = await registerWithGoogle(newObj);
       dispatch(fetchSuccess(data));
       navigate("/");
     } catch ({ response }) {
@@ -62,7 +86,10 @@ function SignupPage() {
           Get Started
         </p>
 
-        <button className="flex items-center w-full justify-center mt-4 text-gray-600 transition-colors duration-300 transform border rounded-lg dark:border-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
+        <button
+          className="flex items-center w-full justify-center mt-4 text-gray-600 transition-colors duration-300 transform border rounded-lg dark:border-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600"
+          onClick={handleGoogleSignup}
+        >
           <div className="px-4 py-2">
             <svg className="w-6 h-6" viewBox="0 0 40 40">
               <path

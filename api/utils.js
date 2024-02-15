@@ -15,8 +15,23 @@ const verifyToken = (req, res, next) => {
   next();
 };
 
+function generateRandomPassword(username) {
+  const randomChars =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+~`|}{[]:;?><,./-="; // Define the characters to be used in the random password
+  const passwordLength = 10; // Define the length of the random password
+
+  let password = username; // Start with the username
+  for (let i = 0; i < passwordLength; i++) {
+    const randomIndex = Math.floor(Math.random() * randomChars.length); // Generate a random index
+    password += randomChars.charAt(randomIndex); // Append a random character to the password
+  }
+
+  return password;
+}
+
 module.exports.connectToDB = connectToDB;
 module.exports.verifyToken = verifyToken;
+module.exports.generateRandomPassword = generateRandomPassword;
 
 // module.exports = {
 //   connectToDB,

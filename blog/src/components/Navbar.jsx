@@ -29,7 +29,14 @@ function NavComponent() {
             arrowIcon={false}
             inline
             label={
-              <Avatar alt="User settings" img={user?.profile_image} rounded />
+              <Avatar
+                alt="User"
+                img={
+                  user?.profile_image ||
+                  "https://flowbite.com/docs/images/people/profile-picture-5.jpg"
+                }
+                rounded
+              />
             }
           >
             <Dropdown.Header>

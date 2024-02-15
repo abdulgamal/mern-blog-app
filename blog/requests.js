@@ -9,8 +9,22 @@ export const loginFn = async (values) => {
   return response;
 };
 
+export const loginWithGoogle = async (values) => {
+  const response = await axios.post("/google-in", values, {
+    withCredentials: true,
+  });
+  return response;
+};
+
 export const registerFn = async (values) => {
   const response = await axios.post("/register", values, {
+    withCredentials: true,
+  });
+  return response;
+};
+
+export const registerWithGoogle = async (values) => {
+  const response = await axios.post("/google-up", values, {
     withCredentials: true,
   });
   return response;
