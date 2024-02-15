@@ -61,8 +61,8 @@ function SignupPage() {
       dispatch(fetchSuccess(data));
       navigate("/");
     } catch ({ response }) {
-      dispatch(fetchError(response?.data?.message));
-      notify(response?.data?.message);
+      dispatch(fetchError(response?.data?.message || "Something went wrong"));
+      notify(response?.data?.message || "Something went wrong");
     }
   };
 
