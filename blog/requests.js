@@ -1,8 +1,9 @@
 import axios from "axios";
 
-axios.defaults.baseURL = import.meta.env.DEV
-  ? import.meta.env.VITE_BACKEND_LOCAL_HOST
-  : import.meta.env.VITE_BACKEND_API;
+axios.defaults.baseURL =
+  import.meta.env.NODE_ENV === "development"
+    ? import.meta.env.VITE_BACKEND_LOCAL_HOST
+    : import.meta.env.VITE_BACKEND_API;
 
 export const loginFn = async (values) => {
   const response = await axios.post("/login", values, {
