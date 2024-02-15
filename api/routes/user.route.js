@@ -50,4 +50,9 @@ router.post("/login", async (req, res, next) => {
   }
 });
 
+router.get("/logout", (req, res) => {
+  res.clearCookie("access_token");
+  res.json({ message: "logout successfully" });
+});
+
 module.exports = router;

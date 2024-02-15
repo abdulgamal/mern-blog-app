@@ -22,8 +22,14 @@ const userSlice = createSlice({
       state.loading = false;
       state.error = action.payload;
     },
+    logOut: (state) => {
+      state.loading = false;
+      state.user = null;
+      state.error = "";
+    },
   },
 });
 
-export const { fetchStart, fetchSuccess, fetchError } = userSlice.actions;
+export const { fetchStart, fetchSuccess, fetchError, logOut } =
+  userSlice.actions;
 export default userSlice.reducer;

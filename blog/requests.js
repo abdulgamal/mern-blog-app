@@ -53,3 +53,7 @@ export const deleteBlogData = async (id) => {
 export const updateBlogData = async (id, values) => {
   return await axios.put("/blogs/" + id, values, { withCredentials: true });
 };
+
+export const logOutUser = async () => {
+  return await axios.get("/logout", { withCredentials: true });
+};

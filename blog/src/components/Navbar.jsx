@@ -1,10 +1,20 @@
 import { Avatar, Button, Dropdown, Navbar } from "flowbite-react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Link, useLocation } from "react-router-dom";
+import { logOut } from "../features/users/userSlice";
+import { persistor } from "../../app/store";
+import { logOutUser } from "../../requests";
 
 function NavComponent() {
   const { user } = useSelector((state) => state.user);
   const { pathname } = useLocation();
+  const dispatch = useDispatch();
+
+  const handleLogOut = async () => {
+    await logOutUser();
+    persistor.purge();
+    dispatch(logOut());
+  };
 
   return (
     <Navbar fluid rounded className="container mx-auto">
@@ -32,9 +42,7 @@ function NavComponent() {
             <Link to="/profile">
               <Dropdown.Item>Profile</Dropdown.Item>
             </Link>
-            <Link to="/sign-in">
-              <Dropdown.Item>Sign Out</Dropdown.Item>
-            </Link>
+            <Dropdown.Item onClick={handleLogOut}>Sign Out</Dropdown.Item>
           </Dropdown>
         ) : (
           <Button>
