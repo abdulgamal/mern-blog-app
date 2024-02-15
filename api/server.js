@@ -26,9 +26,11 @@ app.get("/", (req, res) => {
   res.send("Mern blog api");
 });
 
+const PORT = 8000;
+
 // error handler
 app.use((err, req, res, next) => {
   res.status(400).send(err.message);
 });
 
-app.listen(8000, () => console.log("listening on port", 8000));
+app.listen(PORT, () => console.log("listening on port", PORT));
