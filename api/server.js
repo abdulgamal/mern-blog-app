@@ -22,6 +22,9 @@ connectToDB();
 app.use("/api", userRouter);
 app.use("/api/blogs", blogRouter);
 app.use("/api/blogs/comments", commentRouter);
+app.get("/", (req, res) => {
+  res.send("Mern blog api");
+});
 
 // error handler
 app.use((err, req, res, next) => {
