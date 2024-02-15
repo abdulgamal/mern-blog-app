@@ -57,3 +57,7 @@ export const updateBlogData = async (id, values) => {
 export const logOutUser = async () => {
   return await axios.get("/logout", { withCredentials: true });
 };
+
+export const updateUser = async (values) => {
+  return await axios.put("/update", values, { withCredentials: true });
+};

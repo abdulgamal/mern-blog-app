@@ -3,6 +3,7 @@ const User = require("../models/user.model");
 const router = express.Router();
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const { verifyToken } = require("../utils");
 
 router.post("/register", async (req, res, next) => {
   const { username, email, password, profile_image } = req.body;
@@ -45,6 +46,31 @@ router.post("/login", async (req, res, next) => {
 
     const { password, ...others } = loggedUser._doc;
     res.cookie("access_token", token, { httpOnly: true }).json(others);
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.put("/update", verifyToken, async (req, res, next) => {
+  const userId = req.userId;
+  const { password: pwd, ...others } = req.body;
+
+  try {
+    if (pwd) {
+      const hashPwd = await bcrypt.hash(pwd, 10);
+      const results = await User.findByIdAndUpdate(
+        userId,
+        { password: hashPwd, ...others },
+        { new: true }
+      );
+
+      const { password, ...rest } = results._doc;
+      return res.json(rest);
+    }
+
+    const results = await User.findByIdAndUpdate(userId, others, { new: true });
+    const { password, ...rest } = results._doc;
+    res.json(rest);
   } catch (error) {
     next(error);
   }
