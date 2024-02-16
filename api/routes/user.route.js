@@ -4,6 +4,8 @@ const router = express.Router();
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { verifyToken, generateRandomPassword } = require("../utils");
+// const { app } = require("../server");
+const app = express();
 
 router.post("/register", async (req, res, next) => {
   const { username, email, password, profile_image } = req.body;
@@ -20,7 +22,13 @@ router.post("/register", async (req, res, next) => {
     );
 
     const { password, ...others } = newUser._doc;
-    res.cookie("access_token", token, { httpOnly: true }).json(others);
+    res
+      .cookie("access_token", token, {
+        httpOnly: true,
+        sameSite: app.get("env") === "development" ? true : "none",
+        secure: app.get("env") === "development" ? false : true,
+      })
+      .json(others);
   } catch (error) {
     next(error);
   }
@@ -41,7 +49,13 @@ router.post("/google-up", async (req, res, next) => {
     );
 
     const { password, ...others } = newUser._doc;
-    res.cookie("access_token", token, { httpOnly: true }).json(others);
+    res
+      .cookie("access_token", token, {
+        httpOnly: true,
+        sameSite: app.get("env") === "development" ? true : "none",
+        secure: app.get("env") === "development" ? false : true,
+      })
+      .json(others);
   } catch (error) {
     next(error);
   }
@@ -61,7 +75,13 @@ router.post("/google-in", async (req, res, next) => {
     );
 
     const { password, ...others } = loggedUser._doc;
-    res.cookie("access_token", token, { httpOnly: true }).json(others);
+    res
+      .cookie("access_token", token, {
+        httpOnly: true,
+        sameSite: app.get("env") === "development" ? true : "none",
+        secure: app.get("env") === "development" ? false : true,
+      })
+      .json(others);
   } catch (error) {
     next(error);
   }
@@ -86,7 +106,13 @@ router.post("/login", async (req, res, next) => {
     );
 
     const { password, ...others } = loggedUser._doc;
-    res.cookie("access_token", token, { httpOnly: true }).json(others);
+    res
+      .cookie("access_token", token, {
+        httpOnly: true,
+        sameSite: app.get("env") === "development" ? true : "none",
+        secure: app.get("env") === "development" ? false : true,
+      })
+      .json(others);
   } catch (error) {
     next(error);
   }
