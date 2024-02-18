@@ -34,6 +34,7 @@ function ProfilePage() {
     try {
       const { data } = await updateUser(newObj);
       dispatch(fetchSuccess(data));
+      notify("Profile updated successfully!");
     } catch (error) {
       dispatch(fetchError("Something went wrong!"));
       notify("Something went wrong!");
