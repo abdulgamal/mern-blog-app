@@ -1,5 +1,6 @@
 import { Avatar } from "flowbite-react";
 import { Link } from "react-router-dom";
+import { formatDateDifference } from "../utils/formatDate";
 
 function Card({ item }) {
   return (
@@ -18,8 +19,8 @@ function Card({ item }) {
         className="font-normal text-gray-700 dark:text-gray-400"
         dangerouslySetInnerHTML={{
           __html:
-            item?.content.length > 200
-              ? item?.content?.slice(0, 200) + "..."
+            item?.content.length > 50
+              ? item?.content?.slice(0, 50) + " ..."
               : item?.content,
         }}
       />
@@ -35,7 +36,7 @@ function Card({ item }) {
           </div>
         </div>
         <p className="text-gray-500 text-xs font-semibold">
-          {new Date(item?.createdAt).toLocaleDateString()}
+          {formatDateDifference(item?.createdAt)}
         </p>
       </div>
     </Link>

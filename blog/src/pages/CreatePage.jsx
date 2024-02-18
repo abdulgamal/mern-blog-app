@@ -15,6 +15,7 @@ function CreatePage() {
   const [url, setUrl] = useState("");
   const [progress, setProgress] = useState(0);
   const [file, setFile] = useState("");
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { user } = useSelector((state) => state.user);
   const { id } = useParams();
@@ -34,7 +35,9 @@ function CreatePage() {
 
   const handleUpload = (e) => {
     e.preventDefault();
+    setLoading(true);
     uploadImage(file, setUrl, setProgress);
+    setLoading(false);
   };
 
   const handleSubmit = async (e) => {
@@ -46,7 +49,7 @@ function CreatePage() {
         url ||
         "https://images.unsplash.com/photo-1681949215173-fe0d15c790c1?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHx0b3BpYy1mZWVkfDEwOHxhZXU2ckwtajZld3x8ZW58MHx8fHx8",
     };
-
+    setLoading(true);
     try {
       const { status } = await createBlogFn(newObj);
       if (status == 200) {
@@ -59,6 +62,8 @@ function CreatePage() {
       }
     } catch ({ response }) {
       notify(response.data);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -69,7 +74,7 @@ function CreatePage() {
       content,
       blog_image: url,
     };
-
+    setLoading(true);
     try {
       const { status } = await updateBlogData(iD, newObj);
       if (status == 200) {
@@ -82,6 +87,8 @@ function CreatePage() {
       }
     } catch ({ response }) {
       notify(response.data);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -126,7 +133,12 @@ function CreatePage() {
                 onChange={(e) => setFile(e.target.files[0])}
               />
             </div>
-            <Button outline gradientDuoTone="cyanToBlue" onClick={handleUpload}>
+            <Button
+              outline
+              gradientDuoTone="cyanToBlue"
+              disabled={loading}
+              onClick={handleUpload}
+            >
               Upload
             </Button>
           </div>
@@ -161,6 +173,7 @@ function CreatePage() {
               outline
               gradientDuoTone="cyanToBlue"
               onClick={(e) => handleUpdate(e, id)}
+              disabled={loading}
             >
               Update
             </Button>
@@ -170,6 +183,7 @@ function CreatePage() {
               outline
               gradientDuoTone="cyanToBlue"
               onClick={handleSubmit}
+              disabled={loading}
             >
               Post
             </Button>

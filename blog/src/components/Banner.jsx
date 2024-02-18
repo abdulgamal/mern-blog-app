@@ -1,6 +1,7 @@
 import { Avatar, Button } from "flowbite-react";
 import { HiOutlineArrowRight } from "react-icons/hi";
 import { Link } from "react-router-dom";
+import { formatDateDifference } from "../utils/formatDate";
 
 function Banner({ blog }) {
   return (
@@ -8,10 +9,7 @@ function Banner({ blog }) {
       <div className="grid md:grid-cols-2 gap-3 h-full">
         <div className="h-full overflow-hidden">
           <img
-            src={
-              blog?.blog_image ||
-              "https://plus.unsplash.com/premium_photo-1705056546306-ab28435c20c2?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHx0b3BpYy1mZWVkfDF8eGpQUjRobGtCR0F8fGVufDB8fHx8fA%3D%3D"
-            }
+            src={blog?.blog_image}
             alt="article image"
             className="w-full object-cover md:rounded-lg h-full"
           />
@@ -40,7 +38,7 @@ function Banner({ blog }) {
               <div>
                 <p className="text-gray-700">{blog?.userId?.username}</p>
                 <p className="text-xs text-gray-500 font-semibold">
-                  {new Date(blog?.createdAt).toLocaleDateString()}
+                  {formatDateDifference(blog?.createdAt)}
                 </p>
               </div>
             </div>
