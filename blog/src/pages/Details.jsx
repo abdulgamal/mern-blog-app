@@ -7,86 +7,54 @@ import {
   fetchBlog,
   fetchBlogComments,
 } from "../../requests";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { CiHeart } from "react-icons/ci";
 import { formatDateDifference } from "../utils/formatDate";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 
 function Details() {
   const { id } = useParams();
-  const [blog, setBlog] = useState(null);
   const { user } = useSelector((state) => state.user);
   const [comment, setComment] = useState("");
-  const [comments, setComments] = useState([]);
-  const [refresh, setRefresh] = useState("");
-  const [loading, setLoading] = useState(true);
+  const queryClient = useQueryClient();
   const navigate = useNavigate();
 
   const notify = (msg) => toast(msg);
 
-  const fetchDetails = async (val) => {
-    try {
-      const { data } = await fetchBlog(val);
-      setBlog(data);
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const { data, loading } = useQuery(["blog", id], () => fetchBlog(id));
+  const { data: comments } = useQuery(["comments", id], () =>
+    fetchBlogComments(id)
+  );
 
-  const fetchComments = async (val) => {
-    try {
-      const { data } = await fetchBlogComments(val);
-      setComments(data);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  const { mutate } = useMutation((values) => createComment(values), {
+    onSuccess: () => {
+      setComment("");
+      queryClient.invalidateQueries(["comments", id]);
+    },
+  });
 
-  const postComment = async () => {
-    try {
-      let newObj = { blogId: id, comment };
-      const { status } = await createComment(newObj);
-      if (status == 200) {
-        setComment("");
-        setRefresh("post");
-      }
-    } catch (error) {
-      console.log(error);
+  const { mutate: deleteComment } = useMutation(
+    (val) => deleteBlogComment(val),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries(["comments", id]);
+      },
     }
-  };
+  );
 
-  const deleteComment = async (val) => {
-    try {
-      const { status } = await deleteBlogComment(val);
-      if (status == 200) {
-        setRefresh("comment");
-      }
-    } catch ({ response }) {
+  const { mutate: deleteBlog } = useMutation((val) => deleteBlogData(val), {
+    onSuccess: () => {
+      navigate("/");
+      queryClient.invalidateQueries("blogs");
+    },
+    onError: ({ response }) => {
       notify(response?.data?.message);
-    }
-  };
+    },
+  });
 
-  const deleteBlog = async (val) => {
-    try {
-      const { status } = await deleteBlogData(val);
-      if (status == 200) {
-        navigate("/");
-      }
-    } catch ({ response }) {
-      notify(response?.data?.message);
-    }
-  };
-
-  useEffect(() => {
-    fetchDetails(id);
-  }, [id]);
-
-  useEffect(() => {
-    fetchComments(id);
-  }, [id, refresh]);
+  let newObj = { blogId: id, comment };
 
   return (
     <div className="container mx-auto">
@@ -116,42 +84,42 @@ function Details() {
         <>
           <div className="h-[50vh] my-4">
             <img
-              src={blog?.blog_image}
+              src={data?.data?.blog_image}
               alt="detail image"
               className="h-full w-full object-cover md:rounded-lg"
             />
           </div>
           <div className=" md:w-9/12 mx-auto px-3">
-            <h2 className="text-2xl font-bold">{blog?.title}</h2>
+            <h2 className="text-2xl font-bold">{data?.data?.title}</h2>
             <div
               className=" text-gray-500 tracking-wider my-2"
-              dangerouslySetInnerHTML={{ __html: blog?.content }}
+              dangerouslySetInnerHTML={{ __html: data?.data?.content }}
             />
             <div className="flex my-4 items-center space-x-3 justify-between">
               <div className="flex items-center space-x-2">
                 <Avatar
                   alt="User profile"
-                  img={blog?.userId?.profile_image}
+                  img={data?.data?.userId?.profile_image}
                   rounded
                 />
                 <div>
                   <p className="text-gray-500 font-semibold">
-                    {blog?.userId?.username}
+                    {data?.data?.userId?.username}
                   </p>
                   <p className="text-gray-500 font-semibold text-[10px]">
-                    {formatDateDifference(blog?.createdAt)}
+                    {formatDateDifference(data?.data?.createdAt)}
                   </p>
                 </div>
               </div>
-              {user?._id == blog?.userId?._id && (
+              {user?._id == data?.data?.userId?._id && (
                 <>
                   <div className="flex items-center space-x-2">
                     <Button color="gray">
-                      <Link to={`/update/${blog?._id}`}>Edit</Link>
+                      <Link to={`/update/${data?.data?._id}`}>Edit</Link>
                     </Button>
                     <Button
                       color="failure"
-                      onClick={() => deleteBlog(blog?._id)}
+                      onClick={() => deleteBlog(data?.data?._id)}
                     >
                       Delete
                     </Button>
@@ -176,7 +144,7 @@ function Details() {
                 />
                 <Button
                   disabled={comment.length < 4}
-                  onClick={postComment}
+                  onClick={() => mutate(newObj)}
                   outline
                   gradientDuoTone="cyanToBlue"
                   className="mt-3"
@@ -191,7 +159,7 @@ function Details() {
             )}
           </div>
           <div className="my-3 md:w-9/12 mx-auto px-3">
-            {comments.map((comment) => (
+            {comments?.data?.map((comment) => (
               <div
                 key={comment?._id}
                 className="flex flex-row space-x-3 mb-3 border border-gray-100 rounded-lg items-start p-3"
