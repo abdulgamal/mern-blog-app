@@ -8,6 +8,7 @@ import uploadImage from "../utils/uploadImage";
 import ProgressBar from "@ramonak/react-progress-bar";
 import { useNavigate, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 
 function CreatePage() {
   const [content, setContent] = useState("");
@@ -15,29 +16,60 @@ function CreatePage() {
   const [url, setUrl] = useState("");
   const [progress, setProgress] = useState(0);
   const [file, setFile] = useState("");
-  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { user } = useSelector((state) => state.user);
   const { id } = useParams();
+  const queryClient = useQueryClient();
 
   const notify = (msg) => toast(msg);
 
-  const fetchDetails = async (val) => {
-    try {
-      const { data } = await fetchBlog(val);
-      setTitle(data?.title);
-      setContent(data?.content);
-      setUrl(data?.blog_image);
-    } catch (error) {
-      console.log(error);
+  useQuery(["edit", id], () => fetchBlog(id), {
+    enabled: !!id,
+    onSuccess: (data) => {
+      setTitle(data?.data?.title);
+      setContent(data?.data?.content);
+      setUrl(data?.data?.blog_image);
+    },
+  });
+
+  const { mutate, loading } = useMutation((values) => createBlogFn(values), {
+    onSuccess: () => {
+      setTitle("");
+      setProgress(0);
+      setContent("");
+      setUrl("");
+      setFile("");
+      queryClient.invalidateQueries("blogs");
+      navigate("/");
+    },
+    onError: ({ response }) => {
+      notify(response?.data);
+    },
+  });
+
+  const { mutate: updateBlog, loading: load } = useMutation(
+    (values) => {
+      return updateBlogData(id, values);
+    },
+    {
+      onSuccess: () => {
+        setTitle("");
+        setProgress(0);
+        setContent("");
+        setUrl("");
+        setFile("");
+        queryClient.invalidateQueries("blogs");
+        navigate("/");
+      },
+      onError: ({ response }) => {
+        notify(response.data);
+      },
     }
-  };
+  );
 
   const handleUpload = (e) => {
     e.preventDefault();
-    setLoading(true);
     uploadImage(file, setUrl, setProgress);
-    setLoading(false);
   };
 
   const handleSubmit = async (e) => {
@@ -49,53 +81,18 @@ function CreatePage() {
         url ||
         "https://images.unsplash.com/photo-1681949215173-fe0d15c790c1?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHx0b3BpYy1mZWVkfDEwOHxhZXU2ckwtajZld3x8ZW58MHx8fHx8",
     };
-    setLoading(true);
-    try {
-      const { status } = await createBlogFn(newObj);
-      if (status == 200) {
-        setTitle("");
-        setProgress(0);
-        setContent("");
-        setUrl("");
-        setFile("");
-        navigate("/");
-      }
-    } catch ({ response }) {
-      notify(response.data);
-    } finally {
-      setLoading(false);
-    }
+    mutate(newObj);
   };
 
-  const handleUpdate = async (e, iD) => {
+  const handleUpdate = async (e) => {
     e.preventDefault();
     let newObj = {
       title,
       content,
       blog_image: url,
     };
-    setLoading(true);
-    try {
-      const { status } = await updateBlogData(iD, newObj);
-      if (status == 200) {
-        setTitle("");
-        setProgress(0);
-        setContent("");
-        setUrl("");
-        setFile("");
-        navigate("/");
-      }
-    } catch ({ response }) {
-      notify(response.data);
-    } finally {
-      setLoading(false);
-    }
+    updateBlog(newObj);
   };
-
-  useEffect(() => {
-    if (!id) return;
-    fetchDetails(id);
-  }, [id]);
 
   useEffect(() => {
     if (!user) {
@@ -172,8 +169,8 @@ function CreatePage() {
               type="submit"
               outline
               gradientDuoTone="cyanToBlue"
-              onClick={(e) => handleUpdate(e, id)}
-              disabled={loading}
+              onClick={handleUpdate}
+              disabled={load}
             >
               Update
             </Button>
@@ -183,7 +180,7 @@ function CreatePage() {
               outline
               gradientDuoTone="cyanToBlue"
               onClick={handleSubmit}
-              disabled={loading}
+              disabled={loading || !title || !content}
             >
               Post
             </Button>
