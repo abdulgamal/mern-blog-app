@@ -1,27 +1,10 @@
-import { useEffect, useState } from "react";
 import Banner from "../components/Banner";
 import Blogs from "../components/Blogs";
 import { fetchBlogs } from "../../requests";
+import { useQuery } from "react-query";
 
 function HomePage() {
-  const [blogs, setBlogs] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  const handleFetch = async () => {
-    try {
-      const { data } = await fetchBlogs();
-      setBlogs(data);
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    handleFetch();
-  }, []);
-
+  const { data, loading } = useQuery("blogs", fetchBlogs);
   return (
     <div className="container mx-auto">
       {loading && (
@@ -47,13 +30,13 @@ function HomePage() {
           </div>
         </div>
       )}
-      {blogs?.length > 0 && (
+      {data?.data?.length > 0 && (
         <>
-          <Banner blog={blogs?.[0]} />
-          <Blogs results={blogs} />
+          <Banner blog={data?.data?.[0]} />
+          <Blogs results={data?.data} />
         </>
       )}
-      {!loading && blogs.length === 0 && (
+      {!loading && data?.data?.length === 0 && (
         <div className="h-screen justify-center items-center flex px-3">
           <p className="text-gray-700 font-bold text-2xl text-center">
             No Blogs Available at the moment!.
