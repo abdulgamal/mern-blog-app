@@ -4,10 +4,10 @@ import { fetchBlogs } from "../../requests";
 import { useQuery } from "react-query";
 
 function HomePage() {
-  const { data, loading } = useQuery("blogs", fetchBlogs);
+  const { data, isLoading } = useQuery("blogs", fetchBlogs);
   return (
     <div className="container mx-auto">
-      {loading && (
+      {isLoading && (
         <div className="h-screen flex justify-center items-center">
           <div role="status">
             <svg
@@ -36,7 +36,7 @@ function HomePage() {
           <Blogs results={data?.data} />
         </>
       )}
-      {!loading && data?.data?.length === 0 && (
+      {!isLoading && data?.data?.length === 0 && (
         <div className="h-screen justify-center items-center flex px-3">
           <p className="text-gray-700 font-bold text-2xl text-center">
             No Blogs Available at the moment!.

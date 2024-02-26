@@ -23,7 +23,7 @@ function Details() {
 
   const notify = (msg) => toast(msg);
 
-  const { data, loading } = useQuery(["blog", id], () => fetchBlog(id));
+  const { data, isLoading } = useQuery(["blog", id], () => fetchBlog(id));
   const { data: comments } = useQuery(["comments", id], () =>
     fetchBlogComments(id)
   );
@@ -58,7 +58,7 @@ function Details() {
 
   return (
     <div className="container mx-auto">
-      {loading ? (
+      {isLoading ? (
         <div className="h-screen flex justify-center items-center">
           <div role="status">
             <svg
