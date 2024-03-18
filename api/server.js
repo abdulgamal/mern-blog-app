@@ -1,6 +1,7 @@
 const express = require("express");
 const userRouter = require("./routes/user.route");
 const blogRouter = require("./routes/blog.route");
+const chamaRouter = require("./routes/chama.route");
 const commentRouter = require("./routes/comment.route");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
@@ -20,6 +21,7 @@ app.use(
 connectToDB();
 
 app.use("/api", userRouter);
+app.use("/api/chama", chamaRouter);
 app.use("/api/blogs", blogRouter);
 app.use("/api/blogs/comments", commentRouter);
 app.get("/", (req, res) => {
